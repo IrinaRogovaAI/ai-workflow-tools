@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist: Correct AI Workflow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #212529;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .progress-section {
+            margin-top: 25px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .progress-bar-container {
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #51cf66 0%, #37b24d 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .checklist-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .section-icon {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+            min-width: 80px;
+        }
+
+        .section-title {
+            flex: 1;
+        }
+
+        .section-title h2 {
+            color: #212529;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .section-title p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .section-progress {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .checklist-item {
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .checklist-item.completed {
+            background: linear-gradient(135deg, #d3f9d8 0%, #c3fae8 100%);
+            border-left-color: #51cf66;
+        }
+
+        .checklist-item.completed .item-checkbox {
+            background: #51cf66;
+            border-color: #51cf66;
+        }
+
+        .checklist-item.completed .item-checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .item-checkbox {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #adb5bd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #212529;
+            flex: 1;
+        }
+
+        .item-time {
+            background: #e7f5ff;
+            color: #1971c2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .checklist-item.completed .item-time {
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+
+        .item-description {
+            margin-left: 45px;
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .item-tip {
+            margin-left: 45px;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        .checklist-item.completed .item-tip {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .btn-reset {
+            background: #f8f9fa;
+            color: #495057;
+        }
+
+        .btn-reset:hover {
+            background: #e9ecef;
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+        }
+
+        .celebration {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            border-radius: 20px;
+            color: white;
+            animation: bounceIn 0.6s ease;
+        }
+
+        .celebration.show {
+            display: block;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .celebration h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .celebration p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .section-title h2 {
+                font-size: 1.3rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Checklist: Your AI Workflow</h1>
+            <p class="subtitle">Check off items as you go. Put this into practice today!</p>
+            
+            <div class="progress-section">
+                <div class="progress-label">
+                    <span>Your Progress</span>
+                    <span id="progressText">0 of 15 (0%)</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBar">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="celebration" id="celebration">
+            <h2>Congratulations!</h2>
+            <p>You've mastered the correct AI workflow!<br>Now apply this to your work.</p>
+        </div>
+
+        <!-- Morning Block -->
+        <div class="checklist-section">
+            <div class="section-header">
+                <div class="section-icon">MORNING</div>
+                <div class="section-title">
+                    <h2>Morning Ritual (15 minutes)</h2>
+                    <p>Start your day right - with focus and clarity</p>
+                </div>
+                <div class="section-progress" data-section="morning">0/5</div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Sort Emails with AI</div>
+                    <div class="item-time">3-5 min</div>
+                </div>
+                <div class="item-description">
+                    Copy emails into Claude → Use sorting prompt → Focus on critical items only
+                </div>
+                <div class="item-tip">
+                    Prompt: "Sort these emails: Critical / Important / FYI / Delegate"
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Review Today's Tasks</div>
+                    <div class="item-time">5 min</div>
+                </div>
+                <div class="item-description">
+                    Share calendar + task list → AI prioritizes using Eisenhower Matrix
+                </div>
+                <div class="item-tip">
+                    AI shows: do now, schedule, delegate, or drop
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Pick Your Top 3</div>
+                    <div class="item-time">2 min</div>
+                </div>
+                <div class="item-description">
+                    Choose 3 tasks that MUST get done today, no matter what
+                </div>
+                <div class="item-tip">
+                    Everything else is secondary. Stay focused!
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Prep for First Meeting</div>
+                    <div class="item-time">3 min</div>
+                </div>
+                <div class="item-description">
+                    AI prepares: executive summary, key numbers, likely questions
+                </div>
+                <div class="item-tip">
+                    Walk in prepared, not winging it
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Hit Inbox Zero</div>
+                    <div class="item-time">2 min</div>
+                </div>
+                <div class="item-description">
+                    All emails processed, priorities clear, ready to dive in
+                </div>
+                <div class="item-tip">
+                    Clean inbox = clear head
+                </div>
+            </div>
+        </div>
+
+        <!-- Day Block -->
+        <div class="checklist-section">
+            <div class="section-header">
+                <div class="section-icon">DAYTIME</div>
+                <div class="section-title">
+                    <h2>Throughout the Day</h2>
+                    <p>Work efficiently - delegate routine to AI</p>
+                </div>
+                <div class="section-progress" data-section="day">0/6</div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">"Me or AI?" Filter</div>
+                    <div class="item-time">Always</div>
+                </div>
+                <div class="item-description">
+                    Before each task: "Does this require MY brain or can AI handle it?"
+                </div>
+                <div class="item-tip">
+                    If AI can do it in less than 5 min and you'd take more than 30 min → delegate to AI!
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">First Draft Always AI</div>
+                    <div class="item-time">Per task</div>
+                </div>
+                <div class="item-description">
+                    Email, report, presentation: AI creates draft → you improve
+                </div>
+                <div class="item-tip">
+                    Don't write from scratch! Editing is 5x faster
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Documents: AI Analysis First</div>
+                    <div class="item-time">Per task</div>
+                </div>
+                <div class="item-description">
+                    Received report → AI makes summary → read essence → ask questions
+                </div>
+                <div class="item-tip">
+                    2 hours of reading → 15 minutes with AI
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">"Board of Directors" for Decisions</div>
+                    <div class="item-time">Per task</div>
+                </div>
+                <div class="item-description">
+                    Complex decision → AI shows arguments from all sides → you decide
+                </div>
+                <div class="item-tip">
+                    CFO, COO, CMO - all perspectives in 10 minutes
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Quick Responses with AI</div>
+                    <div class="item-time">Per task</div>
+                </div>
+                <div class="item-description">
+                    AI generates draft response → you edit details → send
+                </div>
+                <div class="item-tip">
+                    30 minutes per email → 5 minutes with AI
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Logic Check</div>
+                    <div class="item-time">Always</div>
+                </div>
+                <div class="item-description">
+                    AI can make mistakes → verify numbers → check logic → common sense
+                </div>
+                <div class="item-tip">
+                    AI = assistant, not oracle
+                </div>
+            </div>
+        </div>
+
+        <!-- Evening Block -->
+        <div class="checklist-section">
+            <div class="section-header">
+                <div class="section-icon">EVENING</div>
+                <div class="section-title">
+                    <h2>Day Closure (10 minutes)</h2>
+                    <p>End your day right - with clarity for tomorrow</p>
+                </div>
+                <div class="section-progress" data-section="evening">0/4</div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Day Summary with AI</div>
+                    <div class="item-time">5 min</div>
+                </div>
+                <div class="item-description">
+                    AI analyzes: what's done, what remains, who to follow up with
+                </div>
+                <div class="item-tip">
+                    Nothing forgotten, everything structured
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Tomorrow's Plan</div>
+                    <div class="item-time">3 min</div>
+                </div>
+                <div class="item-description">
+                    AI prepares plan: calendar + tasks + priorities + meeting prep
+                </div>
+                <div class="item-tip">
+                    Start tomorrow with a ready plan, no chaos
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Inbox = 0 (again)</div>
+                    <div class="item-time">2 min</div>
+                </div>
+                <div class="item-description">
+                    All emails processed or delegated → clean start tomorrow
+                </div>
+                <div class="item-tip">
+                    Don't carry tails into tomorrow
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Leave On Time</div>
+                    <div class="item-time">4:00-5:00 PM</div>
+                </div>
+                <div class="item-description">
+                    Everything done → mind clear → can disconnect and rest
+                </div>
+                <div class="item-tip">
+                    With AI, overtime isn't necessary!
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="checklist-section">
+            <div class="actions">
+                <button class="btn btn-reset" onclick="resetAll()">
+                    Start Over
+                </button>
+                <button class="btn btn-complete" onclick="completeAll()">
+                    Check All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let completedItems = new Set();
+        const totalItems = document.querySelectorAll('.checklist-item').length;
+
+        function toggleItem(element) {
+            const isCompleted = element.classList.contains('completed');
+            
+            if (isCompleted) {
+                element.classList.remove('completed');
+                completedItems.delete(element);
+            } else {
+                element.classList.add('completed');
+                completedItems.add(element);
+                
+                // Animation on check
+                element.style.animation = 'none';
+                setTimeout(() => {
+                    element.style.animation = 'bounceIn 0.4s ease';
+                }, 10);
+            }
+            
+            updateProgress();
+            updateSectionProgress();
+        }
+
+        function updateProgress() {
+            const completed = completedItems.size;
+            const percentage = Math.round((completed / totalItems) * 100);
+            
+            document.getElementById('progressText').textContent = `${completed} of ${totalItems} (${percentage}%)`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressBar').textContent = `${percentage}%`;
+            
+            // Show celebration if all completed
+            if (completed === totalItems) {
+                document.getElementById('celebration').classList.add('show');
+            } else {
+                document.getElementById('celebration').classList.remove('show');
+            }
+        }
+
+        function updateSectionProgress() {
+            const sections = ['morning', 'day', 'evening'];
+            
+            sections.forEach(section => {
+                const items = document.querySelectorAll(`.checklist-item[data-section="${section}"]`);
+                const completed = Array.from(items).filter(item => item.classList.contains('completed')).length;
+                const progressElement = document.querySelector(`.section-progress[data-section="${section}"]`);
+                
+                if (progressElement) {
+                    progressElement.textContent = `${completed}/${items.length}`;
+                }
+            });
+        }
+
+        function resetAll() {
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                item.classList.remove('completed');
+            });
+            completedItems.clear();
+            updateProgress();
+            updateSectionProgress();
+            document.getElementById('celebration').classList.remove('show');
+        }
+
+        function completeAll() {
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                item.classList.add('completed');
+                completedItems.add(item);
+            });
+            updateProgress();
+            updateSectionProgress();
+        }
+
+        // Initialize
+        updateProgress();
+        updateSectionProgress();
+    </script>
+</body>
+</html>

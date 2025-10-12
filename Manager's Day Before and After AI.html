@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager's Day: Before and After AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .toggle-btn {
+            background: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .comparison-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .workflow-column {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .column-header {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .before-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+
+        .after-header {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+        .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(7) { animation-delay: 0.7s; }
+        .timeline-item:nth-child(8) { animation-delay: 0.8s; }
+
+        .timeline-dot {
+            position: absolute;
+            left: -26px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid;
+            z-index: 1;
+        }
+
+        .before .timeline-dot {
+            border-color: #ff6b6b;
+            animation: pulse-red 2s infinite;
+        }
+
+        .after .timeline-dot {
+            border-color: #51cf66;
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+            }
+        }
+
+        @keyframes pulse-green {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(81, 207, 102, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(81, 207, 102, 0);
+            }
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .before .timeline-content {
+            border-color: #ff6b6b;
+        }
+
+        .after .timeline-content {
+            border-color: #51cf66;
+        }
+
+        .timeline-content:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .time-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .before .time-badge {
+            background: #ffe0e0;
+            color: #c92a2a;
+        }
+
+        .after .time-badge {
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 5px;
+            color: #212529;
+        }
+
+        .task-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .stats-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
+            border-left: 4px solid #ff6b6b;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .before .highlight-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
+            border-color: #ff6b6b;
+        }
+
+        .after .highlight-box {
+            background: linear-gradient(135deg, #f4fce3 0%, #d3f9d8 100%);
+            border-color: #51cf66;
+        }
+
+        .highlight-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .before .highlight-title {
+            color: #c92a2a;
+        }
+
+        .after .highlight-title {
+            color: #2b8a3e;
+        }
+
+        .progress-bar {
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: width 1.5s ease;
+        }
+
+        .routine-fill {
+            background: linear-gradient(90deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+
+        .strategy-fill {
+            background: linear-gradient(90deg, #51cf66 0%, #37b24d 100%);
+        }
+
+        .comparison-wrapper.before-mode .after {
+            display: none;
+        }
+
+        .comparison-wrapper.after-mode .before {
+            display: none;
+        }
+
+        .comparison-wrapper.before-mode,
+        .comparison-wrapper.after-mode {
+            grid-template-columns: 1fr;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        @media (max-width: 968px) {
+            .comparison-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .toggle-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Manager's Day: Before and After AI</h1>
+        <p class="subtitle">Visualizing workflow transformation</p>
+
+        <div class="toggle-container">
+            <button class="toggle-btn active" onclick="showView('compare')">Comparison</button>
+            <button class="toggle-btn" onclick="showView('before')">❌ Without AI</button>
+            <button class="toggle-btn" onclick="showView('after')">✅ With AI</button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-container">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h2 style="font-size: 1.8rem; color: #212529; margin-bottom: 8px;"> Measurable Impact of AI Implementation</h2>
+                <p style="color: #6c757d; font-size: 1.05rem;">Real results from managers who use AI in their daily work</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="emoji"></div>
+                    <div class="stat-value">2.5 hrs</div>
+                    <div class="stat-label">Time saved per day</div>
+                </div>
+                <div class="stat-card">
+                    <div class="emoji"></div>
+                    <div class="stat-value">85%</div>
+                    <div class="stat-label">Time on strategy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="emoji"></div>
+                    <div class="stat-value">87%</div>
+                    <div class="stat-label">Routine reduction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="emoji"></div>
+                    <div class="stat-value">-26%</div>
+                    <div class="stat-label">Workday reduction</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison View -->
+        <div class="comparison-wrapper compare-mode" id="compareView">
+            <!-- Before Column -->
+            <div class="workflow-column before">
+                <div class="column-header before-header">
+                    ❌ WITHOUT AI: Survival Mode
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">9:00-9:30 (30 min)</div>
+                            <div class="task-title"> Email Processing</div>
+                            <div class="task-description">Reading all 30 emails in a row, trying to understand priorities. Forget half of them.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">9:30-10:30 (60 min)</div>
+                            <div class="task-title"> Reviewing Sales Report</div>
+                            <div class="task-description">Digging through Excel, building charts manually. Spending time on formatting.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">10:30-11:15 (45 min)</div>
+                            <div class="task-title">☕ Meeting</div>
+                            <div class="task-description">No preparation. Numbers from memory. Chaotic discussion without structure.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">11:15-13:15 (120 min)</div>
+                            <div class="task-title"> Creating Presentation</div>
+                            <div class="task-description">Struggling with design, moving slides, searching for images. 80% of time - formatting.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">13:15-14:00 (45 min)</div>
+                            <div class="task-title"> Rushed Lunch</div>
+                            <div class="task-description">Answering emails between bites. No real break.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">14:00-18:00 (240 min)</div>
+                            <div class="task-title"> Firefighting</div>
+                            <div class="task-description">Reacting to urgent issues. No strategy. Jumping from task to task.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">18:00-18:30 (30 min)</div>
+                            <div class="task-title"> Finishing Up</div>
+                            <div class="task-description">Overtime. Exhausted. Inbox overflowing. Tomorrow will be the same.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title"> End of Day:</div>
+                    <p style="color: #495057; margin-bottom: 15px;">9.5 hours of work. 85% of time on routine, 15% on strategy. Completely burned out by evening.</p>
+                    
+                    <div style="margin-top: 15px; font-weight: 600; color: #212529;">Time Distribution:</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill routine-fill" style="width: 85%">Routine 85%</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill strategy-fill" style="width: 15%">Strategy 15%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- After Column -->
+            <div class="workflow-column after">
+                <div class="column-header after-header">
+                    ✅ WITH AI: Efficiency Mode
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">9:00-9:05 (5 min)</div>
+                            <div class="task-title"> AI Sorts Email</div>
+                            <div class="task-description">AI prioritized everything. Reading only 5 critical ones. Delegated the rest.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">9:05-9:12 (7 min)</div>
+                            <div class="task-title"> AI Analyzes Sales</div>
+                            <div class="task-description">Got executive summary, insights, problem areas. Ready for action.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">9:12-9:30 (18 min)</div>
+                            <div class="task-title">☕ Prepared Meeting</div>
+                            <div class="task-description">AI prepared structure + key numbers. Meeting is focused and short.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">9:30-9:50 (20 min)</div>
+                            <div class="task-title"> AI Created Draft</div>
+                            <div class="task-description">AI generated structure and content. I just refined the details.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">9:50-11:00 (70 min)</div>
+                            <div class="task-title"> Strategy Work</div>
+                            <div class="task-description">Deep thinking time. Planning Q4, considering new initiatives.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">11:00-12:00 (60 min)</div>
+                            <div class="task-title"> Proper Lunch</div>
+                            <div class="task-description">Relaxing, not thinking about work. Recharging.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">12:00-15:30 (210 min)</div>
+                            <div class="task-title"> Important Projects</div>
+                            <div class="task-description">Focus on high-level tasks. AI handles the routine.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="time-badge">15:30-16:00 (30 min)</div>
+                            <div class="task-title"> Closing Routine Tasks</div>
+                            <div class="task-description">AI processed remaining emails, delegated tasks, prepared tomorrow's list. Inbox = 0. Leaving on time.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title"> End of Day:</div>
+                    <p style="color: #495057; margin-bottom: 15px;">7 hours of work. 15% on routine, 85% on strategy and important tasks. Leaving with energy!</p>
+                    
+                    <div style="margin-top: 15px; font-weight: 600; color: #212529;">Time Distribution:</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill routine-fill" style="width: 15%">Routine 15%</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill strategy-fill" style="width: 85%">Strategy 85%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showView(view) {
+            // Update buttons
+            const buttons = document.querySelectorAll('.toggle-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update view
+            const compareView = document.getElementById('compareView');
+            
+            // Remove all mode classes
+            compareView.classList.remove('compare-mode', 'before-mode', 'after-mode');
+            
+            // Add appropriate mode class
+            if (view === 'compare') {
+                compareView.classList.add('compare-mode');
+            } else if (view === 'before') {
+                compareView.classList.add('before-mode');
+            } else if (view === 'after') {
+                compareView.classList.add('after-mode');
+            }
+
+            // Re-trigger animations
+            const items = document.querySelectorAll('.timeline-item');
+            items.forEach(item => {
+                item.style.animation = 'none';
+                setTimeout(() => {
+                    item.style.animation = '';
+                }, 10);
+            });
+        }
+    </script>
+</body>
+</html>
