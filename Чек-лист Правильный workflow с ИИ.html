@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чек-лист: Правильный workflow с ИИ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #212529;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .progress-section {
+            margin-top: 25px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .progress-bar-container {
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #51cf66 0%, #37b24d 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .checklist-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .section-icon {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+            min-width: 60px;
+        }
+
+        .section-title {
+            flex: 1;
+        }
+
+        .section-title h2 {
+            color: #212529;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .section-title p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .section-progress {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .checklist-item {
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .checklist-item.completed {
+            background: linear-gradient(135deg, #d3f9d8 0%, #c3fae8 100%);
+            border-left-color: #51cf66;
+        }
+
+        .checklist-item.completed .item-checkbox {
+            background: #51cf66;
+            border-color: #51cf66;
+        }
+
+        .checklist-item.completed .item-checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .item-checkbox {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #adb5bd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #212529;
+            flex: 1;
+        }
+
+        .item-time {
+            background: #e7f5ff;
+            color: #1971c2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .checklist-item.completed .item-time {
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+
+        .item-description {
+            margin-left: 45px;
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .item-tip {
+            margin-left: 45px;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        .checklist-item.completed .item-tip {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .btn-reset {
+            background: #f8f9fa;
+            color: #495057;
+        }
+
+        .btn-reset:hover {
+            background: #e9ecef;
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+        }
+
+        .celebration {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            border-radius: 20px;
+            color: white;
+            animation: bounceIn 0.6s ease;
+        }
+
+        .celebration.show {
+            display: block;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .celebration h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .celebration p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .section-title h2 {
+                font-size: 1.3rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Чек-лист: Правильный workflow с ИИ</h1>
+            <p class="subtitle">Отмечайте пункты по мере выполнения. Попробуйте применить прямо сегодня!</p>
+            
+            <div class="progress-section">
+                <div class="progress-label">
+                    <span>Ваш прогресс</span>
+                    <span id="progressText">0 из 15 (0%)</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBar">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="celebration" id="celebration">
+            <h2>Поздравляем!</h2>
+            <p>Вы освоили правильный workflow с ИИ!<br>Теперь примените это в своей работе.</p>
+        </div>
+
+        <!-- Утренний блок -->
+        <div class="checklist-section">
+            <div class="section-header">
+                <div class="section-icon">УТРО</div>
+                <div class="section-title">
+                    <h2>Утренний ритуал (15 минут)</h2>
+                    <p>Начните день правильно - с фокуса и ясности</p>
+                </div>
+                <div class="section-progress" data-section="morning">0/5</div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Сортировка почты с ИИ</div>
+                    <div class="item-time">3-5 мин</div>
+                </div>
+                <div class="item-description">
+                    Скопируйте письма в Claude → Используйте промпт сортировки → Читайте только критичное
+                </div>
+                <div class="item-tip">
+                    Промпт: "Отсортируй письма: Критично / Важно / FYI / Делегировать"
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Анализ задач на день</div>
+                    <div class="item-time">5 мин</div>
+                </div>
+                <div class="item-description">
+                    Загрузите календарь + задачи → ИИ расставляет приоритеты по матрице Эйзенхауэра
+                </div>
+                <div class="item-tip">
+                    ИИ покажет: что делать сейчас, что планировать, что делегировать
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Топ-3 приоритета дня</div>
+                    <div class="item-time">2 мин</div>
+                </div>
+                <div class="item-description">
+                    Выделите 3 главные задачи, которые ОБЯЗАТЕЛЬНО нужно закрыть сегодня
+                </div>
+                <div class="item-tip">
+                    Всё остальное - вторично. Фокус на главном!
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Подготовка к первой встрече</div>
+                    <div class="item-time">3 мин</div>
+                </div>
+                <div class="item-description">
+                    ИИ готовит: executive summary, ключевые цифры, возможные вопросы
+                </div>
+                <div class="item-tip">
+                    Вы приходите на встречу подготовленным, а не "на лету"
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="morning" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Inbox = 0</div>
+                    <div class="item-time">2 мин</div>
+                </div>
+                <div class="item-description">
+                    Все письма обработаны, приоритеты понятны, можно начинать день
+                </div>
+                <div class="item-tip">
+                    Чистый inbox = чистая голова
+                </div>
+            </div>
+        </div>
+
+        <!-- Дневной блок -->
+        <div class="checklist-section">
+            <div class="section-header">
+                <div class="section-icon">ДЕНЬ</div>
+                <div class="section-title">
+                    <h2>В течение дня</h2>
+                    <p>Работайте эффективно - делегируйте рутину ИИ</p>
+                </div>
+                <div class="section-progress" data-section="day">0/6</div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Фильтр "Я или ИИ?"</div>
+                    <div class="item-time">Постоянно</div>
+                </div>
+                <div class="item-description">
+                    Перед каждой задачей: "Это требует МОЕГО мозга или ИИ справится?"
+                </div>
+                <div class="item-tip">
+                    Если ИИ сделает за меньше 5 мин, а вы за больше 30 мин → делегируйте ИИ!
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Первый драфт всегда ИИ</div>
+                    <div class="item-time">По задаче</div>
+                </div>
+                <div class="item-description">
+                    Письмо, отчёт, презентация: ИИ создаёт черновик → вы улучшаете
+                </div>
+                <div class="item-tip">
+                    Не пишите с нуля! Редактировать в 5 раз быстрее
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Документы: сначала ИИ-анализ</div>
+                    <div class="item-time">По задаче</div>
+                </div>
+                <div class="item-description">
+                    Получили отчёт → ИИ делает summary → читаете суть → задаёте вопросы
+                </div>
+                <div class="item-tip">
+                    2 часа чтения → 15 минут с ИИ
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">"Совет директоров" для решений</div>
+                    <div class="item-time">По задаче</div>
+                </div>
+                <div class="item-description">
+                    Сложное решение → ИИ показывает аргументы со всех сторон → вы решаете
+                </div>
+                <div class="item-tip">
+                    CFO, COO, CMO - все точки зрения за 10 минут
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Быстрые ответы с ИИ</div>
+                    <div class="item-time">По задаче</div>
+                </div>
+                <div class="item-description">
+                    ИИ генерирует проект ответа → вы правите детали → отправляете
+                </div>
+                <div class="item-tip">
+                    30 минут на письмо → 5 минут с ИИ
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="day" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Проверка логики</div>
+                    <div class="item-time">Всегда</div>
+                </div>
+                <div class="item-description">
+                    ИИ может ошибаться → проверяйте цифры → проверяйте логику → здравый смысл
+                </div>
+                <div class="item-tip">
+                    ИИ = помощник, не оракул
+                </div>
+            </div>
+        </div>
+
+        <!-- Вечерний блок -->
+        <div class="checklist-section">
+            <div class="section-header">
+                <div class="section-icon">ВЕЧЕР</div>
+                <div class="section-title">
+                    <h2>Закрытие дня (10 минут)</h2>
+                    <p>Завершите день правильно - с ясностью на завтра</p>
+                </div>
+                <div class="section-progress" data-section="evening">0/4</div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Итоги дня с ИИ</div>
+                    <div class="item-time">5 мин</div>
+                </div>
+                <div class="item-description">
+                    ИИ анализирует: что сделано, что осталось, кому написать follow-up
+                </div>
+                <div class="item-tip">
+                    Ничего не забыто, всё структурировано
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">План на завтра</div>
+                    <div class="item-time">3 мин</div>
+                </div>
+                <div class="item-description">
+                    ИИ готовит план: календарь + задачи + приоритеты + подготовка к встречам
+                </div>
+                <div class="item-tip">
+                    Завтра начнёте с готовым планом, без хаоса
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Inbox = 0 (снова)</div>
+                    <div class="item-time">2 мин</div>
+                </div>
+                <div class="item-description">
+                    Все письма обработаны или делегированы → чистый старт завтра
+                </div>
+                <div class="item-tip">
+                    Не тащите хвосты на завтра
+                </div>
+            </div>
+
+            <div class="checklist-item" data-section="evening" onclick="toggleItem(this)">
+                <div class="item-header">
+                    <div class="item-checkbox"></div>
+                    <div class="item-title">Уходите вовремя</div>
+                    <div class="item-time">16:00-17:00</div>
+                </div>
+                <div class="item-description">
+                    Всё сделано → голова чистая → можно отключиться и отдохнуть
+                </div>
+                <div class="item-tip">
+                    С ИИ переработки не нужны!
+                </div>
+            </div>
+        </div>
+
+        <!-- Действия -->
+        <div class="checklist-section">
+            <div class="actions">
+                <button class="btn btn-reset" onclick="resetAll()">
+                    Начать заново
+                </button>
+                <button class="btn btn-complete" onclick="completeAll()">
+                    Отметить всё
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let completedItems = new Set();
+        const totalItems = document.querySelectorAll('.checklist-item').length;
+
+        function toggleItem(element) {
+            const isCompleted = element.classList.contains('completed');
+            
+            if (isCompleted) {
+                element.classList.remove('completed');
+                completedItems.delete(element);
+            } else {
+                element.classList.add('completed');
+                completedItems.add(element);
+                
+                // Анимация при отметке
+                element.style.animation = 'none';
+                setTimeout(() => {
+                    element.style.animation = 'bounceIn 0.4s ease';
+                }, 10);
+            }
+            
+            updateProgress();
+            updateSectionProgress();
+        }
+
+        function updateProgress() {
+            const completed = completedItems.size;
+            const percentage = Math.round((completed / totalItems) * 100);
+            
+            document.getElementById('progressText').textContent = `${completed} из ${totalItems} (${percentage}%)`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressBar').textContent = `${percentage}%`;
+            
+            // Показать celebration если всё выполнено
+            if (completed === totalItems) {
+                document.getElementById('celebration').classList.add('show');
+            } else {
+                document.getElementById('celebration').classList.remove('show');
+            }
+        }
+
+        function updateSectionProgress() {
+            const sections = ['morning', 'day', 'evening'];
+            
+            sections.forEach(section => {
+                const items = document.querySelectorAll(`.checklist-item[data-section="${section}"]`);
+                const completed = Array.from(items).filter(item => item.classList.contains('completed')).length;
+                const progressElement = document.querySelector(`.section-progress[data-section="${section}"]`);
+                
+                if (progressElement) {
+                    progressElement.textContent = `${completed}/${items.length}`;
+                }
+            });
+        }
+
+        function resetAll() {
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                item.classList.remove('completed');
+            });
+            completedItems.clear();
+            updateProgress();
+            updateSectionProgress();
+            document.getElementById('celebration').classList.remove('show');
+        }
+
+        function completeAll() {
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                item.classList.add('completed');
+                completedItems.add(item);
+            });
+            updateProgress();
+            updateSectionProgress();
+        }
+
+        // Инициализация
+        updateProgress();
+        updateSectionProgress();
+    </script>
+</body>
+</html>
