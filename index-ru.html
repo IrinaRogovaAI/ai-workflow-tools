@@ -1,36 +1,199 @@
-.lang-switch {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.lang-btn {
-    background: white;
-    border: 2px solid #667eea;
-    color: #667eea;
-    padding: 8px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.lang-btn:hover {
-    background: #667eea;
-    color: white;
-}
-
-.lang-btn.active {
-    background: #667eea;
-    color: white;
-}
-
-@media (max-width: 768px) {
-    .lang-switch {
-        position: static;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инструменты AI Workflow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .lang-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .lang-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #212529;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            color: #6c757d;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .tools {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .tool-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .tool-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .tool-description {
+            font-size: 0.95rem;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .footer-link:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .lang-switch {
+                position: static;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            
+            body {
+                display: block;
+                padding-top: 80px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="index.html" class="lang-btn">🇬🇧 English</a>
+        <a href="index-ru.html" class="lang-btn active">🇷🇺 Русский</a>
+    </div>
+    
+    <div class="container">
+        <h1>🚀 Инструменты AI Workflow</h1>
+        <p>Бесплатные интерактивные инструменты для трансформации работы с AI</p>
+        
+        <div class="tools">
+            <a href="checklist-ru.html" class="tool-link">
+                📋 Интерактивный чек-лист
+                <div class="tool-description">15 шагов ежедневной работы с AI</div>
+            </a>
+            
+            <a href="comparison-ru.html" class="tool-link">
+                📊 Сравнение До/После
+                <div class="tool-description">Визуализация трансформации вашего дня</div>
+            </a>
+        </div>
+        
+        <div class="footer">
+            Создано с 🤖 для продуктивных профессионалов
+            <div class="footer-links">
+                <a href="https://t.me/rogova_irina" target="_blank" class="footer-link">
+                    💬 Связаться со мной
+                </a>
+                <a href="https://t.me/neural_couture" target="_blank" class="footer-link">
+                    📱 Мой канал Neural Couture
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
